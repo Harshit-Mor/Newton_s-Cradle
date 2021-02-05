@@ -1,18 +1,15 @@
+
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
 const Body = Matter.Body;
-const Constraint=Matter.Constraint;
+const Render = Matter.Render;
+const Constraint = Matter.Constraint;
 
-var ground,tree;
-var stone;
-var boyImage,boy;
-var launcher;
-var mango1,mango2,mango3,mango4,mango5;
 
 function preload()
 {
- boyImage=loadImage("boy.png");	
+	
 }
 
 function setup() {
@@ -22,22 +19,17 @@ function setup() {
 	engine = Engine.create();
 	world = engine.world;
 
-    ground=new Ground(600,height,1200,20);
-    tree=new Tree(590,700);
-
-	stone=new Stone(150,300,20,20);
-
-	boy=createSprite(185,647,10,10);
-	boy.addImage(boyImage);
-	boy.scale=0.08;
-	
-	mango1=new Mango(500,350,20);
-	mango2=new Mango(530,230,20);
-	mango3=new Mango(650,370,20);
-	mango4=new Mango(600,300,20);
-	mango5=new Mango(690,280,20);
-
-    launcher=new Launcher(stone.body,{x:140,y:600});
+	roof = new Roof(400,40,500,20)
+	bobobject1 = new Bob(200,470,100)
+	bobobject2 = new Bob(300,470,100)
+	bobobject3 = new Bob(400,470,100)
+	bobobject4 = new Bob(500,470,100)
+	bobobject5 = new Bob(600,470,100)
+  rope1= new Rope(bobobject1.body,roof.body,-100*2,0);
+  rope2= new Rope(bobobject2.body,roof.body,-50*2,0);
+  rope3= new Rope(bobobject3.body,roof.body,-0*2,0);
+  rope4= new Rope(bobobject4.body,roof.body,50*2,0);
+  rope5= new Rope(bobobject5.body,roof.body,100*2,0);
 
 	Engine.run(engine);
   
@@ -45,56 +37,28 @@ function setup() {
 
 
 function draw() {
+  background("yellow");
   rectMode(CENTER);
-  background(230);
-
-  textSize(25);
-  text("Press Space to get a second Chance to Play!!",100 ,70);
+  Engine.update(engine)
   
- ground.display();
- tree.display();
- mango1.display();
- mango2.display();
- mango3.display();
- mango4.display();
- mango5.display();
- 
- launcher.display();
- stone.display();
+  roof.display();
+  bobobject1.display();
+  bobobject2.display()
+  bobobject3.display()
+  bobobject4.display()
+  bobobject5.display()
+  rope1.display()
+  rope2.display()
+  rope3.display()
+  rope4.display()
+  rope5.display()
 
- detectCollision(stone,mango1);
- detectCollision(stone,mango2);
- detectCollision(stone,mango3);
- detectCollision(stone,mango4);
- detectCollision(stone,mango5);
-
-
- drawSprites();
+  keyPressed();
+  drawSprites();
  
 }
+function keyPressed() { 
+	if (keyCode === UP_ARROW) 
+	{ Matter.Body.applyForce(bobobject1.body,bobobject1.body.position,{x:-100,y:-100}); } 
+} 
 
-function mouseDragged(){
-    Matter.Body.setPosition(stone.body,{x:mouseX,y:mouseY});
-
-}
-
-function mouseReleased(){
-    launcher.fly();
-}
-
-function detectCollision(lstone,lmango){
- mangoBodyPosition=lmango.body.position
- stoneBodyPosition=lstone.body.position
- 
- var distance=dist(stoneBodyPosition.x,stoneBodyPosition.y,mangoBodyPosition.x,mangoBodyPosition.y)
-   if(distance<=lmango.r+lstone.r){
-	   Matter.Body.setStatic(lmango.body,false);
-   }
-}
-
-function keyPressed(){
-	if(keyCode===32){
-		Matter.Body.setPosition(stone.body,{x:235,y:420})
-		launcher.attach(stone.body);
-	}
-}
